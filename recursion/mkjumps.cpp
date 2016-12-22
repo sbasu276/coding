@@ -1,0 +1,98 @@
+#include<cstdio>
+#include<cstring>
+#include<utility>
+#include<algorithm>
+#include<vector>
+using namespace std;
+#define MAX 11
+
+int table[MAX][MAX];
+int global_max;
+
+void disp()
+{
+	for(int i=0;i<MAX;i++)
+	{	
+		for(int j=0;j<MAX;j++)
+			printf("%2d ",table[i][j]);
+		
+		printf("\n");
+	}
+}
+int max(int a, int b)
+{
+	if(a>b)
+		return a;
+	return b;
+}
+
+int p[] = {-2, -2, -1, -1, 1, 1, 2, 2};
+int q[] = {-1, 1, -2, 2, -2, 2, -1, 1};
+
+int move(int r,int c,int curr_pathLen)
+{
+
+	global_max = max(curr_pathLen, global_max);
+	
+	//table[r][c]=1; //color it to black
+	//sqrcount--;
+	
+ 	for (int i = 0; i < 8; ++i) 
+ 	{
+ 		// if cell is within the range and is not visited
+		if (r + p[i] >= 0 && c + q[i] >=0 && r + p[i] < 10 && c + q[i] < 10 && table[r + p[i]][c + q[i]] == 0) 
+		{
+			table[r + p[i]][c + q[i]] = 1; //color black 
+			move(r + p[i], c + q[i], curr_pathLen + 1);
+			table[r + p[i]][c + q[i]] = 0; // mark unvisit for other branches since its a branch and bound
+		}
+	}
+}
+		
+int main()
+{
+	int n,t=0,sqrcount;
+	int i,j,start,fin;
+	while(1)
+	{
+		t++;
+		scanf("%d",&n);
+		if(n==0)
+			break;
+		memset(table,-1,sizeof(table));
+		sqrcount=0;
+		for(i=0;i<n;i++)
+		{
+			scanf("%d",&start);
+			scanf("%d",&fin);
+			fin += start;
+			for(j=start;j<fin;j++)
+			{
+				table[i][j]=0;
+				sqrcount++;
+			}
+		}
+		int x = -1, y = -1; // find the top left corner
+		for (int i = 0; i < n; ++i)
+			for (int j = 0; j < 10; ++j)
+				if (x == -1 && table[i][j]==0) 
+				{
+					x = i;
+					y = j;
+				}
+
+		global_max=0;
+		table[x][y] = 1; //color black
+		move(x,y,1);
+		
+		sqrcount = sqrcount-global_max;
+		printf("Case %d, %d ",t,sqrcount);
+		if(sqrcount==1)
+			printf("square can not be reached.\n");
+		
+		else
+			printf("squares can not be reached.\n");
+
+	}
+return 0;
+}

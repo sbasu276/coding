@@ -1,0 +1,54 @@
+#include<cstdio>
+#include<cstring>
+using namespace std;
+#define MAX 200
+int main()
+{
+	char s[MAX];
+	int a[MAX],b[MAX];
+	while((scanf("%s",s))!=EOF)
+	{
+		int i,l;
+		for(l=0;s[l];l++);
+		
+		if(l==1 && s[0]=='1')
+			printf("1\n");
+		else
+		{
+
+			// store in reverse order. for ease of calculation
+			for(i=0;i<l;i++)
+				a[i]=s[l-1-i]-'0';
+
+			// calculate n-1. result is 2*(n-1)
+			for(i=0; a[i]<1 ;i++);
+			if(i>0)
+			{
+				a[i]--;
+				while(--i>=0)
+				a[i]=9;
+			}
+			else
+				a[i]--;
+			
+
+			memset(b,0,sizeof(b));
+			int temp=0,carry=0;
+			for(i=0;i<l;i++)
+			{
+				temp=carry+b[i]+(a[i]<<1);
+				b[i]=temp%10;
+				carry=temp/10;
+			}
+			if(carry)
+				b[i++]+=carry;
+	
+			for(i--;i>=0;i--)
+				printf("%d",b[i]);
+			printf("\n");
+		}
+	}
+return 0;
+}
+
+			
